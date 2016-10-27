@@ -31,8 +31,9 @@ def addSlash(url):
 
 def FindLogin():
     Admin = ""
-    LoginFile = open("admin.dat","r")
-    url = input("Enter the url >>")
+    passwordFile = open("admin.dat","r") # Opening Password File.
+    print("[*] Opening Password List File\n")
+    url = input("[+] Enter the url >>")
 
     if(url.endswith("/") != True):
         url2 = addSlash(url)
@@ -43,20 +44,23 @@ def FindLogin():
         url3 = "http://" + url2
     else:
         url3 = url2
+
     print(url3)
-    print("Directories and links found having possiblities to be a admin logins are :\n")
+    print("[*] Checking administrative login page:\n")
 
     while(True):
-        adminLink = LoginFile.readline()
+        adminLink = passwordFile.readline().rstrip()
+
         if not adminLink:
             break
         urlAdmin = url3 + adminLink
-        print(urlAdmin)
+
         urlStatus = requests.get(urlAdmin).status_code
+        print("[!] The admin login page is not at %s" %urlAdmin)
         print(urlStatus)
-        if(urlStatus == 200):
-            Admin =urlAdmin
-            print(Admin)
+        if(urlStatus == requests.codes.ok): # Checking Status Code if it is 200
+            print("[+] Found admin page at %s" %urlAdmin)
             time.sleep(1)
+            break;
 Credit()
 FindLogin()
